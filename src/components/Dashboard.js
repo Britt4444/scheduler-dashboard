@@ -34,30 +34,38 @@ class Dashboard extends Component {
     focused: null
   };
 
+  //Instance method
   selectPanel(id) {
-    this.setState({
-     focused: id
-    });
-   }
+    this.setState(previousState => ({
+      focused: previousState.focused !== null ? null : id
+    }));
+  }
+
+  //Class property with arrow fn
+  // selectPanel = id => {
+  //   this.setState({
+  //     focused: id
+  //   });
+  // };
 
   render() {
     const dashboardClasses = classnames("dashboard", {
       "dashboard--focused": this.state.focused
-     });
+    });
 
     if (this.state.loading) {
       return <Loading />;
     }
 
     const panelItems = (this.state.focused ? data.filter(panelItem => this.state.focused === panelItem.id) : data)
-    .map((panelItem) => (
-      <Panel
-        key={panelItem.id}
-        label={panelItem.label}
-        value={panelItem.value}
-        onSelect={this.selectPanel}
-      />
-    ));
+      .map((panelItem) => (
+        <Panel
+          key={panelItem.id}
+          label={panelItem.label}
+          value={panelItem.value}
+          onSelect={() => this.selectPanel(panelItem.id)}
+        />
+      ));
 
     return (
       <main className={dashboardClasses}>
